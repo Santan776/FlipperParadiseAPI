@@ -1,7 +1,5 @@
-﻿using Models.Models.Common;
-using Models.Models.Solana;
+﻿using Models.Models.Solana;
 using SolanaTokenAnalyzer;
-using System.Net;
 
 namespace FlipperParadiseAPI.Services
 {
@@ -10,7 +8,7 @@ namespace FlipperParadiseAPI.Services
         public async Task<(SolMetadata metadata, string error)> GetTokenMetadata(string tokenAddress)
         {
             var analyzer = new TokenAnalyzerAPI();
-            var result = await analyzer.GetTokenMetadata(tokenAddress, new HttpClient(), rpc.Connection1,
+            var result = await analyzer.GetTokenMetadata(tokenAddress, new HttpClient(), rpc.Connection2,
                 configuration.GetSection("ApiKeys")["Helius"]);
             return result;
         }
@@ -30,6 +28,11 @@ namespace FlipperParadiseAPI.Services
             return result;
         }
 
-        
+        public async Task<(SolHoldersInfo holdersInfo, string error)> GetTokenTopHolders(string tokenAddress)
+        {
+            var analyzer = new TokenAnalyzerAPI();
+            var result = await analyzer.GetTokenTopHolders(tokenAddress, rpc.Connection1);
+            return result;
+        }
     }
 }

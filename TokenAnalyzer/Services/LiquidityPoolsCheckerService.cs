@@ -1,7 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Solana.Unity.Rpc;
-using System.Diagnostics.Contracts;
 using System.IO.Compression;
 using System.Net.Http.Headers;
 using System.Text;

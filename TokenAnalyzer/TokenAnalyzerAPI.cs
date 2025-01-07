@@ -1,5 +1,4 @@
-﻿using Models.Models.Common;
-using Models.Models.Solana;
+﻿using Models.Models.Solana;
 using Solana.Unity.Rpc;
 using SolanaTokenAnalyzer.Services;
 
@@ -53,6 +52,11 @@ namespace SolanaTokenAnalyzer
             return (devInfo, e);
         }
 
-        
+        public async Task<(SolHoldersInfo holdersInfo, string error)> GetTokenTopHolders(string tokenAddress, IRpcClient rpc)
+        {
+            var holdersService = new TopHoldersCheckService(rpc);
+            var holdersInfo = await holdersService.GetTopHolders(tokenAddress);
+            return holdersInfo;
+        }
     }
 }

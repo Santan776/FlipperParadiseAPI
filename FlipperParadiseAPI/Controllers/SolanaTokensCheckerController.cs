@@ -42,6 +42,16 @@ namespace FlipperParadiseAPI.Controllers
             });
         }
 
-       
+        [HttpGet("solana/token/topholders/{tokenAddress}")]
+        public async Task<IActionResult> GetTokenTopHolders(string tokenAddress)
+        {
+            var topHolders = await tokenAnalyzer.GetTokenTopHolders(tokenAddress);
+            return Ok(new
+            {
+                success = string.IsNullOrEmpty(topHolders.error),
+                topHolders.error,
+                topHolders.holdersInfo
+            });
+        }
     }
 }
