@@ -7,7 +7,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton<SolanaRPCConnection>();
-builder.Services.AddTransient<TokenAnalyzerService>();
+builder.Services.AddTransient<SolanaTokensAnalyzerService>();
 
 var app = builder.Build();
 

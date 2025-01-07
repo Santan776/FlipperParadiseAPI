@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FlipperParadiseAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
-    public class TokensCheckerController(TokenAnalyzerService tokenAnalyzer) : ControllerBase
+    public class SolanaTokensCheckerController(SolanaTokensAnalyzerService tokenAnalyzer) : ControllerBase
     {
-        [HttpGet("/token/metadata/{tokenAddress}")]
+        [HttpGet("solana/token/metadata/{tokenAddress}")]
         public async Task<IActionResult> GetTokenMetadata(string tokenAddress)
         {
             var metadata = await tokenAnalyzer.GetTokenMetadata(tokenAddress);
@@ -19,7 +18,7 @@ namespace FlipperParadiseAPI.Controllers
             });
         }
 
-        [HttpGet("/token/liquidity/{tokenAddress}")]
+        [HttpGet("solana/token/liquidity/{tokenAddress}")]
         public async Task<IActionResult> GetTokenLiquidityPools(string tokenAddress)
         {
             var liquidity = await tokenAnalyzer.GetTokenLiquidityPools(tokenAddress);
@@ -31,7 +30,7 @@ namespace FlipperParadiseAPI.Controllers
             });
         }
 
-        [HttpGet("/token/devinfo/{tokenAddress}")]
+        [HttpGet("solana/token/devinfo/{tokenAddress}")]
         public async Task<IActionResult> GetTokenDevInfo(string tokenAddress)
         {
             var devInfo = await tokenAnalyzer.GetTokenDevInfo(tokenAddress);
@@ -42,5 +41,7 @@ namespace FlipperParadiseAPI.Controllers
                 devInfo.devInfo
             });
         }
+
+       
     }
 }

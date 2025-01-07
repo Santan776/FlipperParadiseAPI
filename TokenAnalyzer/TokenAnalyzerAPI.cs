@@ -1,4 +1,5 @@
-﻿using Models.Models.Solana;
+﻿using Models.Models.Common;
+using Models.Models.Solana;
 using Solana.Unity.Rpc;
 using SolanaTokenAnalyzer.Services;
 
@@ -51,5 +52,7 @@ namespace SolanaTokenAnalyzer
             }
             return (devInfo, e);
         }
+
+        
     }
 }
