@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Models.Models.Solana;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Solana.Unity.Rpc;
 using SolanaTokenAnalyzer.Helpers.Accounts;
@@ -94,6 +95,56 @@ namespace SolanaTokenAnalyzer.Services
                 }
             }         
             return amount;
+        }
+
+        public async Task<(List<SolDevPreviousCoin> devPreviousCoins, string error)> GetDevPreviousCoins(string devAddress, string tokenAddress)
+        {
+            var e = string.Empty;
+            var retry = 0;
+            while (retry++ < 3)
+            {
+                try
+                {
+                    var response = await httpClient.GetAsync($"https://frontend-api.pump.fun/coins/user-created-coins/{devAddress}?limit=40&offset=0&includeNsfw=true");
+                    if (response.StatusCode != System.Net.HttpStatusCode.OK)
+                    {
+                        e = response.StatusCode.ToString();
+                        continue;
+                    }
+                    var json = await response.Content.ReadAsStringAsync();
+                    var coins = JsonConvert.DeserializeObject<List<PumpFunDevCoinsResponse>>(json);
+                    if (coins != null)
+                    {
+                        var devPreviousCoins = new List<SolDevPreviousCoin>();
+                        foreach (var coin in coins)
+                        {
+                            if (coin.Mint != tokenAddress)
+                            {
+                                devPreviousCoins.Add(new SolDevPreviousCoin
+                                {
+                                    Mint = coin.Mint,
+                                    Name = coin.Name,
+                                    Ticker = coin.Symbol,
+                                    Image = coin.ImageUri,
+                                    MarketCap = coin.MarketCap,
+                                    NSFW = coin.Nsfw,
+                                    Complete = coin.Complete
+                                });
+                            }
+                        }
+                        return (devPreviousCoins
+                            .OrderByDescending(x => x.MarketCap)
+                            .Take(10)
+                            .ToList(), string.Empty);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    e = ex.Message;
+                    continue;
+                }
+            }
+            return (new List<SolDevPreviousCoin>(), e);
         }
 
         private async Task<(string devAddress, string error)> GetPumpFunTokenDev(string tokenAddress)

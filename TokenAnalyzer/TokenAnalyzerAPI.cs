@@ -44,10 +44,18 @@ namespace SolanaTokenAnalyzer
                 var amount = await devService.GetDevHoldAmount(devAddress.devAddress, tokenAddress);
                 devInfo.TokenAmount = amount.amount;
                 e += amount.error;
-                var linkedWallets = await devService.GetDevLinkedWallets(amount.ATA, tokenAddress, heliusApiKey);
-                devInfo.LinkedWalletsAmount = linkedWallets.linkedWalletsAmount;
-                devInfo.TokensSentToLinkedWallets = linkedWallets.sentToLinkedWallets;
-                e += linkedWallets.error;
+
+                if (!string.IsNullOrEmpty(amount.ATA))
+                {
+                    var linkedWallets = await devService.GetDevLinkedWallets(amount.ATA, tokenAddress, heliusApiKey);
+                    devInfo.LinkedWalletsAmount = linkedWallets.linkedWalletsAmount;
+                    devInfo.TokensSentToLinkedWallets = linkedWallets.sentToLinkedWallets;
+                    e += linkedWallets.error;
+                }            
+
+                var devPreviousCoins = await devService.GetDevPreviousCoins(devAddress.devAddress, tokenAddress);
+                devInfo.DevPreviousCoins = devPreviousCoins.devPreviousCoins;
+                e += devPreviousCoins.error;
             }
             return (devInfo, e);
         }
